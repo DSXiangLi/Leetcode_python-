@@ -38,3 +38,38 @@ Inputs:
 Output:
     (int) 3
 '''
+
+def generous(lambs):
+    '''
+    give everyone as many as possible. 2^0.....2^(n-1) for n level 
+    '''
+    level = 1 
+    while (2**(level)-1) <= lambs:
+        level += 1
+    
+    return level - 1
+
+
+def strict(lambs):
+    '''
+    most strict is a fibonacci
+    next level is alwasys the sum of previous 2 sub level
+    '''
+    a = 1
+    b = 1  
+    total = 2
+    level = 2 
+    while total <=lambs:
+        a,b = b, a+b
+        total += b
+        level += 1 
+    
+    return level -1 
+     
+    
+def answer(total_lambs):
+    if total_lambs <=1:
+        return 0
+    else:
+        return strict(total_lambs) - generous(total_lambs)
+    
