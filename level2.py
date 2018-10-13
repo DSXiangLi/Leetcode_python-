@@ -42,12 +42,17 @@ Output:
 def generous(lambs):
     '''
     give everyone as many as possible. 2^0.....2^(n-1) for n level 
+    Need to add left over check.
     '''
     level = 1 
     while (2**(level)-1) <= lambs:
         level += 1
     
-    return level - 1
+    leftover = lambs - (2**(level-1)-1)
+    if leftover >= 2**(level-2) + 2**(level-3):
+        return level
+    else:
+        return level-1
 
 
 def strict(lambs):
@@ -68,8 +73,7 @@ def strict(lambs):
      
     
 def answer(total_lambs):
-    if total_lambs <=1:
+    if total_lambs <10 or total_lambs >= 10**9:
         return 0
     else:
         return strict(total_lambs) - generous(total_lambs)
-    
