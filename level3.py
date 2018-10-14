@@ -1,3 +1,4 @@
+'''
 Power Hungry
 ============
 
@@ -25,3 +26,30 @@ Inputs:
     (int list) xs = [-2, -3, 4, -5]
 Output:
     (string) "60"
+    
+'''
+def answer(xs):
+    if len(xs) ==1:
+        return str(xs)
+    power = 1
+    max_negative = None
+    
+    for i in range(len(xs)):    
+        if xs[i] == 0:
+            continue
+        
+        power = power * xs[i]
+        
+        if xs[i] < 0:
+            if not max_negative:
+                max_negative = xs[i]
+            else :
+                if xs[i] > max_negative:
+                    max_negative = xs[i]
+    if power < 0:
+        power = power/max_negative
+        
+    power = str(int(power))
+    return power 
+    
+   
