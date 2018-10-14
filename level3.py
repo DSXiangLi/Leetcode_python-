@@ -30,17 +30,21 @@ Output:
 '''
 def answer(xs):
     if len(xs) ==1:
-        return str(xs)
+        return str(xs[0])
+        
     power = 1
     max_negative = None
-    
+    count0 = 0 
+    countn = 0
     for i in range(len(xs)):    
         if xs[i] == 0:
+            count0 += 1
             continue
         
-        power = power * xs[i]
+        power *= xs[i]
         
         if xs[i] < 0:
+            countn +=1
             if not max_negative:
                 max_negative = xs[i]
             else :
@@ -48,8 +52,11 @@ def answer(xs):
                     max_negative = xs[i]
     if power < 0:
         power = power/max_negative
-        
-    power = str(int(power))
-    return power 
     
+    if count0 == len(xs):
+        return str(0)
+    if count0 == len(xs)-1 and countn ==1:
+        return str(0)
+        
+    return str(power)
    
