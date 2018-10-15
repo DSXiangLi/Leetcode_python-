@@ -37,3 +37,44 @@ Inputs:
 Output:
     (string) "4"
 '''
+
+## Stupid solution with runtime error 
+def answer(M,F):
+    M = int(M)
+	F = int(F)
+	if M<1 or F <1:
+		return 'impossible'
+	generation = 0	
+	while M >=1 and F>=1:
+		if M == F:
+			if M!=1:
+				return 'impossible'
+			else:
+				return generation 
+		smaller = min(M,F)
+		bigger = max(M,F)
+		M,F = smaller, bigger - smaller
+	return 'impossible'
+
+## successful submit 
+def answer(M,F):
+    M = int(M)
+    F = int(F)
+    if (M<1 or F <1):
+        return ('impossible')
+    generation = 0	
+	
+    while (M >=1 and F>=1):
+#        print('M={} F={}'.format(M,F))    
+        smaller = min(M,F)
+        bigger = max(M,F)
+        if(smaller==1):
+            return (generation + bigger-1)
+        else:
+            if(bigger%smaller==0):
+                return 'impossible'
+            else:
+                generation += bigger//smaller
+                M,F = smaller, bigger%smaller
+                
+    return 'impossible'
