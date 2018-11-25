@@ -1,43 +1,39 @@
 """
 慢慢码系列 - Leetcode Python
 
-111. Minimum Depth of Binary Tree
+543. Diameter of Binary Tree
 
-Given a binary tree, find its minimum depth.
-
-The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
-
-Note: A leaf is a node with no children.
+Given a binary tree, you need to compute the length of the diameter of the tree. The diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.
 
 Example:
+Given a binary tree
+          1
+         / \
+        2   3
+       / \
+      4   5
+Return 3, which is the length of the path [4,2,1,3] or [5,2,1,3].
 
-Given binary tree [3,9,20,null,null,15,7],
-
-    3
-   / \
-  9  20
-    /  \
-   15   7
-return its minimum depth = 2.
+Note: The length of path between two nodes is represented by the number of edges between them.
 """
-##和max depth对比有一点需要注意就是左/右子树为空的时候需要特别处理,要确保终止在叶节点
 
-class Solution:
-    def minDepth(self, root):
+## 和max depth的思路相同只不过返回值是左子树深度+ 右子树深度
+class Solution(object):
+    def diameterOfBinaryTree(self, root):
         """
         :type root: TreeNode
         :rtype: int
         """
-        ## base case 1
+        self.diameter = 0
+        self.postorder_util(root)
+        return self.diameter
+    def postorder_util(self, root):
         if not root:
             return 0
-        ## baes case 2
-        if (not root.left) and (not root.right) :
-            return 1
-        if not root.left: return self.minDepth(root.right) + 1
-        if not root.right: return self.minDepth(root.left) + 1
-
-        return min(self.minDepth(root.left), self.minDepth(root.right)) + 1
+        left = self.postorder_util(root.left)
+        right = self.postorder_util(root.right)
+        self.diameter = max(self.diameter, left + right)
+        return max(left,right) + 1
 
 
 class TreeNode:
@@ -74,5 +70,6 @@ def StringToTreeNode(string):
 def main():
     input_string = input('Input your first string here (null): ')
     p = StringToTreeNode(input_string);
-    result = Solution().minDepth(p)
-    print('The minimal depth of tree = {}'.format(result))
+
+    result = Solution().diameterOfBinaryTree(p)
+    print('Diameter of tree = {}'.format(result))

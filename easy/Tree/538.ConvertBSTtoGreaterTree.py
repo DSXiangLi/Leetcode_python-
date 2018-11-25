@@ -1,58 +1,48 @@
 """
 慢慢码系列 - Leetcode Python
 
-226. Invert Binary Tree
+538. Convert BST to Greater Tree
 
-Invert a binary tree.
+Given a Binary Search Tree (BST), convert it to a Greater Tree
+such that every key of the original BST is changed to the original
+key plus sum of all keys greater than the original key in BST.
 
 Example:
 
-Input:
+Input: The root of a Binary Search Tree like this:
+              5
+            /   \
+           2     13
 
-     4
-   /   \
-  2     7
- / \   / \
-1   3 6   9
-Output:
-
-     4
-   /   \
-  7     2
- / \   / \
-9   6 3   1
-Trivia:
-This problem was inspired by this original tweet by Max Howell:
-
-Google: 90% of our engineers use the software you wrote (Homebrew), but you can’t invert a binary tree on a whiteboard so f*** off.
+Output: The root of a Greater Tree like this:
+             18
+            /   \
+          20     13
 """
 
-##这里又用到TreeNode也是mutable的数据类型，所以传址不传值
-##递归过程只是调用自身函数并没有返回值，返回值用在Base case终止时
-
+##和find mode, min difference 思路相反,反转inorder返回非递减序列，以及之前所有节点的和
 class Solution:
-    def invertTree(self, root):
+    def convertBST(self, root):
         """
         :type root: TreeNode
         :rtype: TreeNode
         """
-#        return self.invertTree_recursion(root)
-        return self.invertTree_DFS(root)
-    def invertTree_recursion(self, root):
         if not root:
             return None
-        root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)
-        return root
+        self.cumsum = 0
+        return self.DFS_util(root)
 
-    def invertTree_DFS(self, root):
+    def DFS_util(self, root):
+        # right
         if not root:
-            return None
-        stack = [root]
-        while stack:
-            tmp = stack.pop()
-            tmp.left, tmp.right = tmp.right,tmp.left
-            if tmp.left: stack.append(tmp.left)
-            if tmp.right: stack.append(tmp.right)
+            return
+        self.DFS_util(root.right)
+        # root
+        cursum = self.cumsum
+        self.cumsum += root.val
+        root.val += cursum
+        # left
+        self.DFS_util(root.left)
         return root
 
     def levelOrderBottom_BFS(self,root):
@@ -69,7 +59,7 @@ class Solution:
                 if node.right: queue.append(node.right)
                 tmp.append(node.val)
             result.append(tmp)
-        return result[::-1]
+        return result
 
 class TreeNode:
     def __init__(self, x):
@@ -87,7 +77,7 @@ def StringToTreeNode(string):
     while item_count < len(items):
         node = nodeq[node_count]
         node_count +=1
-        ## create left node add to the queue
+        ## create l eft node add to the queue
         if items[item_count]!='null':
             node.left = TreeNode(int(items[item_count]))
             nodeq.append(node.left)
@@ -103,8 +93,9 @@ def StringToTreeNode(string):
     return root
 
 def main():
-    input_string = input('Input your tree here (null): ')
+    input_string = input('Input your first string here (null): ')
     p = StringToTreeNode(input_string);
-    print('Original Tree  = {}'.format(Solution().levelOrderBottom_BFS(p)))
-    Solution().invertTree(p)
-    print('Inverted Tree  = {}'.format(Solution().levelOrderBottom_BFS(p)))
+    print('Original Tree= {}'.format(Solution().levelOrderBottom_BFS(p)))
+    Solution().convertBST(p)
+    print('Bigger Tree= {}'.format(Solution().levelOrderBottom_BFS(p)))
+

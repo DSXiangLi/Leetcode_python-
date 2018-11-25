@@ -1,56 +1,57 @@
 """
 慢慢码系列 - Leetcode Python
 
-104. Maximum Depth of Binary Tree
+110. Balanced Binary Tree
 
-Given a binary tree, find its maximum depth.
+Given a binary tree, determine if it is height-balanced.
 
-The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+For this problem, a height-balanced binary tree is defined as:
 
-Note: A leaf is a node with no children.
+a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
 
-Example:
+Example 1:
 
-Given binary tree [3,9,20,null,null,15,7],
+Given the following tree [3,9,20,null,null,15,7]:
 
     3
    / \
   9  20
     /  \
    15   7
-return its depth = 3.
-"""
+Return true.
 
-## BFS is faster than recursion
+Example 2:
+
+Given the following tree [1,2,2,3,3,null,null,4,4]:
+
+       1
+      / \
+     2   2
+    / \
+   3   3
+  / \
+ 4   4
+"""
+## 和max depth的基本逻辑相同，有2点比较tricky
+# 1. 递归函数的返回值是一致的，如何能同时返回当前树的最大深度并同时返回是否平衡？ 试试把深度设为-1
+# 2. 递归函数无法中途跳出，所以要记得把是否平衡的判断一直传递下去
 class Solution:
-    def maxDepth(self, root):
+    def isBalanced(self, root):
         """
         :type root: TreeNode
-        :rtype: int
+        :rtype: bool
         """
-#        return self.maxDepth_BFS(root)
-        return self.maxDepth_recursion(root)
-    def maxDepth_BFS(self, root):
-        if not root:
-            return 0
-        queue = [root]
-        level = 0
-        while queue :
-            for i in range(len(queue)):
-                node = queue.pop(0)
-                if node.left : queue.append(node.left)
-                if node.right: queue.append(node.right)
-            level +=1
-        return level
+        return self.postorder_util(root) >0
 
-    def maxDepth_recursion(self, root):
-        ## when to stop
+    def postorder_util(self,root):
         if not root:
             return 0
-        ## how to call it self
-        left = self.maxDepth_recursion(root.left)
-        right = self.maxDepth_recursion(root.right)
+        left = self.postorder_util(root.left)
+        right = self.postorder_util(root.right)
+        if abs(left-right)>1 or left ==-1 or right == -1:
+            return -1
         return max(left, right) + 1
+
 
 
 class TreeNode:
@@ -87,6 +88,5 @@ def StringToTreeNode(string):
 def main():
     input_string = input('Input your first string here (null): ')
     p = StringToTreeNode(input_string);
-
-    result = Solution().maxDepth(p)
-    print('Max Depth of tree = {}'.format(result))
+    result = Solution().isBalanced(p)
+    print('Is the tree balanced ? {}'.format(result))
